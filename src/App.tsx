@@ -1,5 +1,5 @@
 import "./App.css";
-import RegLogForm from "./Components/RegLogForm";
+import RegLogForm from "./сomponents/LogForm";
 
 function App() {
   return (
