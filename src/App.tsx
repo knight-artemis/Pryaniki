@@ -1,11 +1,14 @@
-import "./App.css";
-import RegLogForm from "./сomponents/LogForm";
+import { Route, Routes } from "react-router-dom";
+import "../src/styles/App.css";
+import LogForm from "./сomponents/LogForm";
+import Data from "./сomponents/Data";
 
 function App() {
   return (
-    <>
-      <RegLogForm></RegLogForm>
-    </>
+    <Routes>
+      <Route path="/" element={<Data />} />
+      <Route path="/login" element={<LogForm />} />
+    </Routes>
   );
 }
 
