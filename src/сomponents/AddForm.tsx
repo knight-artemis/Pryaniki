@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from "axios";
@@ -31,15 +31,12 @@ export default function AddForm() {
   };
 
   const addDoc = async (): Promise<void> => {
-    console.log(inputs, "мы данные для отправки");
-    console.log(token, "я токен для отправки");
-
     try {
       axios
         .post(
           `${
             import.meta.env["VITE_API_URL"]
-          }/ru/data/v3/testmethods/docs/userdocs/create}`,
+          }/ru/data/v3/testmethods/docs/userdocs/create`,
           inputs,
           {
             headers: {
@@ -56,10 +53,6 @@ export default function AddForm() {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    console.log(inputs);
-  }, [inputs]);
 
   return (
     <>

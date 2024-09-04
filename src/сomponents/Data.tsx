@@ -62,17 +62,9 @@ export default function Data() {
   };
 
   const deleteDoc = async (id: string): Promise<void> => {
-    console.log(id, "я id для удаления");
-    console.log(token, "я токен для авторизации запроса");
-    console.log(
-      `${
-        import.meta.env["VITE_API_URL"]
-      }/ru/data/v3/testmethods/docs/userdocs/delete/${id}`,
-      "я url для запроса"
-    );
     try {
       axios
-        .post(
+        .delete(
           `${
             import.meta.env["VITE_API_URL"]
           }/ru/data/v3/testmethods/docs/userdocs/delete/${id}`,
@@ -90,6 +82,7 @@ export default function Data() {
     } catch (error) {
       console.log(error);
     }
+    handleClose();
   };
 
   useEffect(() => {
@@ -107,7 +100,7 @@ export default function Data() {
               <TableCell align="right">Тип документа</TableCell>
               <TableCell align="right">Наименование документа</TableCell>
               <TableCell align="right">Компания-подписант</TableCell>
-              <TableCell align="right">Сотрудник=подписант</TableCell>
+              <TableCell align="right">Сотрудник-подписант</TableCell>
               <TableCell align="right">Дата подписания сотрудником</TableCell>
               <TableCell align="right">Дата подписания компанией</TableCell>
               <TableCell align="right">Удаление документа</TableCell>
