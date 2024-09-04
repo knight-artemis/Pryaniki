@@ -6,6 +6,6 @@ export type DataType = {
   documentName: string;
   companySignatureName: string;
   employeeSignatureName: string;
-  employeeSigDate: string;
-  companySigDate: string;
+  employeeSigDate: string | moment.Moment;
+  companySigDate: string | moment.Moment;
 };

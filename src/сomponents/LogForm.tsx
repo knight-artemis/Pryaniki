@@ -1,13 +1,8 @@
 import { useState } from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 export default function LogForm() {
   const navigate = useNavigate();
@@ -16,6 +11,8 @@ export default function LogForm() {
     username: "",
     password: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -26,21 +23,20 @@ export default function LogForm() {
     sessionStorage.setItem("token", token);
   };
 
-  const logUser = async (): Promise<void> => {
+  const logUser = async () => {
+    setIsLoading(true);
     try {
-      axios
-        .post(
-          `${
-            import.meta.env["VITE_API_URL"]
-          }/ru/data/v3/testmethods/docs/login`,
-          inputs
-        )
-        .then((res) => saveToken(res.data.data.token))
-        .then(() => navigate("/"))
-        .then(() => console.log("Авторизация прошла успешно"))
-        .catch((err) => console.log("Ошибка авторизации", err));
+      const response = await axios.post(
+        `${import.meta.env["VITE_API_URL"]}/ru/data/v3/testmethods/docs/login`,
+        inputs
+      );
+      saveToken(response.data.data.token);
+      navigate("/data");
+      console.log("Авторизация прошла успешно");
     } catch (error) {
-      console.log(error);
+      console.log("Ошибка авторизации", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -61,9 +57,14 @@ export default function LogForm() {
           value={inputs.password}
           onChange={handleChange}
         />
-        <Button variant="contained" size="large" onClick={logUser}>
+        <LoadingButton
+          variant="contained"
+          size="large"
+          onClick={logUser}
+          loading={isLoading}
+        >
           Авторизоваться
-        </Button>
+        </LoadingButton>
       </CardContent>
     </Card>
   );
