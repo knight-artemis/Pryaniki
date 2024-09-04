@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { DataType } from "../core/types";
 import {
-    Box,
+  Box,
   Button,
   Modal,
   Paper,
@@ -62,6 +62,14 @@ export default function Data() {
   };
 
   const deleteDoc = async (id: string): Promise<void> => {
+    console.log(id, "я id для удаления");
+    console.log(token, "я токен для авторизации запроса");
+    console.log(
+      `${
+        import.meta.env["VITE_API_URL"]
+      }/ru/data/v3/testmethods/docs/userdocs/delete/${id}`,
+      "я url для запроса"
+    );
     try {
       axios
         .post(
@@ -74,7 +82,7 @@ export default function Data() {
             },
           }
         )
-        .then((res) => console.log(res.data))
+        .then((res) => console.log(res.data, "мы получили данные"))
         .then(() => console.log("Удаление прошло успешно"))
         .catch((err) =>
           console.log("В процессе удаление произошла ошибка", err)
@@ -86,7 +94,6 @@ export default function Data() {
 
   useEffect(() => {
     getData();
-    console.log(token, "Я токен");
   }, []);
 
   return (
