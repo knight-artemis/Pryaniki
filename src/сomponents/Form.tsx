@@ -1,4 +1,4 @@
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Box, Grid, TextField } from "@mui/material";
 import moment from "moment";
 import React, { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -95,7 +95,7 @@ export default function Form({
     } else {
       try {
         setIsLoading(true);
-        const response = await axios.post(
+        await axios.post(
           `${
             import.meta.env["VITE_API_URL"]
           }/ru/data/v3/testmethods/docs/userdocs/set/${id}`,
