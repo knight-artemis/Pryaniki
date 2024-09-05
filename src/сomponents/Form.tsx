@@ -5,6 +5,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from "axios";
 import { DataType } from "../core/types";
 import { LoadingButton } from "@mui/lab";
+import { notifySuccess, notifyWarning } from "../core/toasters";
 
 export default function Form({
   closeModal,
@@ -35,50 +36,86 @@ export default function Form({
   };
 
   const addDoc = async (): Promise<void> => {
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${
-          import.meta.env["VITE_API_URL"]
-        }/ru/data/v3/testmethods/docs/userdocs/create`,
-        inputs,
-        {
-          headers: {
-            "x-auth": `${token}`,
-          },
+    if (
+      !inputs.documentStatus ||
+      !inputs.employeeNumber ||
+      !inputs.documentType ||
+      !inputs.documentName ||
+      !inputs.companySignatureName ||
+      !inputs.employeeSignatureName ||
+      !inputs.employeeSigDate ||
+      !inputs.companySigDate
+    ) {
+      notifyWarning("Заполните все обязательные поля");
+    } else {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          `${
+            import.meta.env["VITE_API_URL"]
+          }/ru/data/v3/testmethods/docs/userdocs/create`,
+          inputs,
+          {
+            headers: {
+              "x-auth": `${token}`,
+            },
+          }
+        );
+        if (response.data.error_code === 0) {
+          await getData();
+          notifySuccess("Документ успешно добавлен");
+        } else {
+          notifyWarning(
+            "В процессе добавления произошла ошибка, попробуйте снова."
+          );
         }
-      );
-      await getData();
-      console.log("Добавление прошло успешно");
-    } catch (error) {
-      console.log("В процессе добавления произошла ошибка", error);
-    } finally {
-      setIsLoading(false);
-      closeModal();
+      } catch (error) {
+        notifyWarning(
+          "В процессе добавления произошла ошибка, попробуйте снова."
+        );
+      } finally {
+        setIsLoading(false);
+        closeModal();
+      }
     }
   };
 
   const updateDoc = async (id: string): Promise<void> => {
-    try {
-      setIsLoading(true);
-      const response = await axios.post(
-        `${
-          import.meta.env["VITE_API_URL"]
-        }/ru/data/v3/testmethods/docs/userdocs/set/${id}`,
-        inputs,
-        {
-          headers: {
-            "x-auth": `${token}`,
-          },
-        }
-      );
-      await getData();
-      console.log("Изменение произошло успешно");
-    } catch (error) {
-      console.log("В процессе изменения произошла ошибка", error);
-    } finally {
-      setIsLoading(false);
-      closeModal();
+    if (
+      !inputs.documentStatus ||
+      !inputs.employeeNumber ||
+      !inputs.documentType ||
+      !inputs.documentName ||
+      !inputs.companySignatureName ||
+      !inputs.employeeSignatureName ||
+      !inputs.employeeSigDate ||
+      !inputs.companySigDate
+    ) {
+      notifyWarning("Все поля должы быть обязательно заполнены.");
+    } else {
+      try {
+        setIsLoading(true);
+        const response = await axios.post(
+          `${
+            import.meta.env["VITE_API_URL"]
+          }/ru/data/v3/testmethods/docs/userdocs/set/${id}`,
+          inputs,
+          {
+            headers: {
+              "x-auth": `${token}`,
+            },
+          }
+        );
+        await getData();
+        notifySuccess("Документ успешно изменен");
+      } catch (error) {
+        notifyWarning(
+          "В процессе изменения произошла ошибка, попробуйте снова."
+        );
+      } finally {
+        setIsLoading(false);
+        closeModal();
+      }
     }
   };
 

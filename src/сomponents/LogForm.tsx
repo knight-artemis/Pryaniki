@@ -3,6 +3,7 @@ import { Card, CardContent, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
+import { notifySuccess, notifyWarning } from "../core/toasters";
 
 export default function LogForm() {
   const navigate = useNavigate();
@@ -24,19 +25,33 @@ export default function LogForm() {
   };
 
   const logUser = async () => {
-    setIsLoading(true);
-    try {
-      const response = await axios.post(
-        `${import.meta.env["VITE_API_URL"]}/ru/data/v3/testmethods/docs/login`,
-        inputs
-      );
-      saveToken(response.data.data.token);
-      navigate("/data");
-      console.log("Авторизация прошла успешно");
-    } catch (error) {
-      console.log("Ошибка авторизации", error);
-    } finally {
-      setIsLoading(false);
+    if (!inputs.username) {
+      notifyWarning("Вы не ввели имя пользователя.");
+    } else if (!inputs.password) {
+      notifyWarning("Вы не ввели пароль.");
+    } else {
+      setIsLoading(true);
+      try {
+        const response = await axios.post(
+          `${
+            import.meta.env["VITE_API_URL"]
+          }/ru/data/v3/testmethods/docs/login`,
+          inputs
+        );
+        if (response.data.error_code === 0) {
+          saveToken(response.data.data.token);
+          navigate("/data");
+          notifySuccess("Добро пожаловать!");
+        } else {
+          notifyWarning("Неверное имя пользователя или пароль.");
+        }
+      } catch (error) {
+        notifyWarning(
+          "В процессе авторизации произошла ошибка, попробуйте снова."
+        );
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 

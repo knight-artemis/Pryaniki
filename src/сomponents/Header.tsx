@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { notifySuccess, notifyWarning } from "../core/toasters";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -15,8 +16,11 @@ export default function Header() {
     try {
       sessionStorage.removeItem("token");
       navigate("/login");
+      notifySuccess("Вы вышли из системы.");
     } catch (error) {
-      console.log(error);
+      notifyWarning(
+        "Произошла ошибка при выхрде из системы, попробуйте еще раз."
+      );
     }
   };
 

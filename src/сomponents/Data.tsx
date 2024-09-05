@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import Form from "./Form";
+import { notifySuccess, notifyWarning } from "../core/toasters";
 
 export default function Data() {
   const [data, setData] = useState<DataType[]>([]);
@@ -74,15 +75,17 @@ export default function Data() {
         }
       );
       setData(response.data.data);
-      console.log("Данные получены успешно");
     } catch (error) {
-      console.log("Ошибка при получении данных", error);
+      notifyWarning(
+        "При получении данных произошла ошибка, обновите страницу."
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   const deleteDoc = async (id: string): Promise<void> => {
+    setIsLoading(true);
     try {
       await axios.delete(
         `${
@@ -95,11 +98,12 @@ export default function Data() {
         }
       );
       setData((prevData) => prevData.filter((el) => el.id !== id));
-      console.log("Удаление прошло успешно");
+      notifySuccess("Документ успешно удален");
     } catch (error) {
-      console.log("В процессе удаление произошла ошибка", error);
+      notifyWarning("В процессе удаление произошла ошибка, попробуйте снова.");
     } finally {
       getData();
+      setIsLoading(false);
     }
   };
 
